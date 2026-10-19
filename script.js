@@ -4,7 +4,7 @@
 
 /* ---------- 1. Configuration: change backend settings here ---------- */
 const CONFIG = {
-  API_BASE_URL: "http://127.0.0.1:8000", // FastAPI server (uvicorn main:app --reload)
+  API_BASE_URL: "https://mental-health-score-5fbm.onrender.com", // FastAPI server (uvicorn main:app --reload)
   PREDICT_PATH: "/predict",              // POST endpoint defined in main.py
   TIMEOUT_MS: 15000,
   // The backend does not define a score range. This value is ONLY the reference
