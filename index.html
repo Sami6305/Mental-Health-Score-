@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mental Health AI – Score Prediction</title>
+  <meta name="description" content="Explore AI-generated mental health score estimates with a clean, data-driven prediction experience.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Shared gradient for the score rings -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs><linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2dd4bf"/><stop offset=".5" stop-color="#60a5fa"/><stop offset="1" stop-color="#f472b6"/>
+    </linearGradient></defs>
+  </svg>
+
+  <header class="nav">
+    <div class="container nav__inner">
+      <a href="#home" class="brand" aria-label="Mental Health AI home">
+        <span class="brand__icon"><i data-lucide="brain-circuit"></i></span>
+        <span>Mental Health AI</span>
+      </a>
+      <nav id="nav-menu" class="nav__links" aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#prediction">Prediction</a>
+        <a href="#about">About</a>
+      </nav>
+      <span class="badge"><i data-lucide="sparkles"></i> AI-Powered Insights</span>
+      <button id="nav-toggle" class="nav__toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section id="home" class="hero">
+      <div class="container hero__grid">
+        <div>
+          <h1>Understand Your Mental Wellness with AI</h1>
+          <p class="lead">Explore AI-generated mental health score estimates through a clean, data-driven prediction experience.</p>
+          <div class="btn-row">
+            <a href="#prediction" class="btn btn--primary">Start Prediction</a>
+            <a href="#how" class="btn btn--ghost">How It Works</a>
+          </div>
+        </div>
+        <!-- Decorative preview only: contains no real predictions -->
+        <div class="preview" aria-hidden="true">
+          <div class="preview__head"><span></span><span></span><span></span><small>Wellness analytics preview</small></div>
+          <div class="preview__body">
+            <svg viewBox="0 0 120 120" class="preview__ring">
+              <circle cx="60" cy="60" r="48" class="ring-bg"/>
+              <circle cx="60" cy="60" r="48" class="ring-fg" stroke-dasharray="210 302"/>
+            </svg>
+            <div class="preview__bars">
+              <i style="--h:55%"></i><i style="--h:80%"></i><i style="--h:40%"></i><i style="--h:68%"></i><i style="--h:90%"></i><i style="--h:60%"></i>
+            </div>
+          </div>
+          <div class="preview__chips"><span>Sleep</span><span>Activity</span><span>Screen time</span><span>Stress</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prediction -->
+    <section id="prediction" class="section">
+      <div class="container narrow">
+        <div class="card form-card">
+          <h2>Mental Health Score Prediction</h2>
+          <p class="muted">Enter the information the prediction model uses. All fields are required. Estimates come from a machine learning model and are not a diagnosis.</p>
+          <div id="form-alert" class="alert alert--error" role="alert" hidden></div>
+          <form id="predict-form" novalidate>
+            <div id="form-sections"></div>
+            <div class="btn-row btn-row--end">
+              <button type="reset" id="reset-btn" class="btn btn--ghost">Reset Form</button>
+              <button type="submit" id="submit-btn" class="btn btn--primary">
+                <span class="spinner" hidden></span><span class="btn__label">Predict Score</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="card results" hidden tabindex="-1" aria-live="polite">
+          <div class="results__head">
+            <h2>Your Prediction Results</h2>
+            <span class="badge badge--mint"><i data-lucide="check-circle-2"></i> Estimate ready</span>
+          </div>
+          <div class="results__grid">
+            <div class="gauge">
+              <svg viewBox="0 0 120 120" role="img" aria-label="Score gauge">
+                <circle cx="60" cy="60" r="50" class="ring-bg"/>
+                <circle id="gauge-fg" cx="60" cy="60" r="50" class="ring-fg" stroke-dasharray="0 314"/>
+              </svg>
+              <div class="gauge__value"><strong id="score-value">–</strong><small id="score-scale"></small></div>
+            </div>
+            <div>
+              <h3>Predicted mental health score</h3>
+              <p id="score-text" class="muted"></p>
+              <p class="note"><i data-lucide="info"></i><span>This number is an estimate from a machine learning model. It is not a diagnosis, and no score ranges or risk categories are defined by the model.</span></p>
+              <dl id="summary" class="summary"></dl>
+            </div>
+          </div>
+          <div class="btn-row no-print">
+            <button id="again-btn" class="btn btn--primary">Make Another Prediction</button>
+            <button id="print-btn" class="btn btn--ghost"><i data-lucide="printer"></i> Print / Save as PDF</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="section section--tint">
+      <div class="container">
+        <h2 class="center">How It Works</h2>
+        <div class="grid-3">
+          <article class="card step"><span class="icon-box"><i data-lucide="clipboard-list"></i></span><h3>Enter Information</h3><p class="muted">Users provide the information required by the model.</p></article>
+          <article class="card step"><span class="icon-box"><i data-lucide="cpu"></i></span><h3>AI Prediction</h3><p class="muted">The application sends the input to the existing prediction API.</p></article>
+          <article class="card step"><span class="icon-box"><i data-lucide="line-chart"></i></span><h3>View Your Results</h3><p class="muted">Users receive the model's estimated score in an easy-to-understand format.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section">
+      <div class="container narrow">
+        <h2>About This Project</h2>
+        <p class="muted">Mental Health AI is a portfolio project that demonstrates machine learning-based score prediction. A trained regression model receives lifestyle and social media usage details and returns a numeric mental health score estimate through a FastAPI service.</p>
+        <p class="muted">The model has not been clinically validated. Results are for demonstration and learning purposes only and should not be used to make health decisions.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <a href="#home" class="brand"><span class="brand__icon"><i data-lucide="brain-circuit"></i></span><span>Mental Health AI</span></a>
+        <p class="muted small">A machine learning demo that estimates a mental health score from lifestyle inputs.</p>
+      </div>
+      <nav aria-label="Footer" class="footer__links"><a href="#home">Home</a><a href="#prediction">Prediction</a><a href="#how">How It Works</a><a href="#about">About</a></nav>
+      <div class="small muted">
+        <p><strong>Privacy:</strong> Avoid entering personally identifying information unless necessary.</p>
+        <p><strong>Disclaimer:</strong> This application is not a substitute for professional mental health care.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
